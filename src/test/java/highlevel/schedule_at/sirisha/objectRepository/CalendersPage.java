@@ -1,6 +1,7 @@
 package highlevel.schedule_at.sirisha.objectRepository;
 
 import highlevel.schedule_at.sirisha.commonUtilities.Utils;
+import highlevel.schedule_at.sirisha.models.BookingPerson;
 import java.time.Duration;
 import java.util.ArrayList;
 import org.openqa.selenium.By;
@@ -36,6 +37,23 @@ public class CalendersPage {
     appointmentsTab.click();
     new WebDriverWait(driver, Utils.DefaultWaitDuration)
         .until(ExpectedConditions.visibilityOfElementLocated(By.className("appointment-actions")));
+  }
+
+  public String getAppointmentTime(BookingPerson bookingPerson) {
+    String appointmentTimeXPath =
+        String.format(
+            "//table//h4[contains(text(), '%s')]/ancestor::tr/td[3]/div",
+            bookingPerson.getFirstName());
+    String appointmentTimeRawFromTable =
+        driver.findElement(By.xpath(appointmentTimeXPath)).getText().trim();
+
+    // The am/pm part of the time in the table is in lower case and this was causing problem with
+    // the date time parse,
+    // hence converting the am/pm part to uppercase.
+    String[] parts = appointmentTimeRawFromTable.split(" ");
+    parts[parts.length - 1] = parts[parts.length - 1].toUpperCase();
+    String appointmentTimeFromTable = String.join(" ", parts);
+    return appointmentTimeFromTable;
   }
 
   public void openAppointmentSelectionView(String calenderLink) {

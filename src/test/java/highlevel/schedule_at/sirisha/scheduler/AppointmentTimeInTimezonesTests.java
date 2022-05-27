@@ -16,7 +16,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -93,12 +92,7 @@ public class AppointmentTimeInTimezonesTests {
 
     calPage.openAppointments();
 
-    String appointmentTimeXPath =
-        String.format(
-            "//table//h4[contains(text(), '%s')]/ancestor::tr/td[3]/div",
-            bookingPerson.getFirstName());
-    String appointmentTimeRawFromTable =
-        driver.findElement(By.xpath(appointmentTimeXPath)).getText().trim();
+    String appointmentTimeRawFromTable = calPage.getAppointmentTime(bookingPerson);
 
     // The am/pm part of the time in the table is in lower case and this was causing problem with
     // the date time parse,
